@@ -34,19 +34,19 @@ private extension MatchTag {
     var teamOneScoreView: some View {
         Text(scoreText(for: teamOneScore))
             .font(.drukWide(.bold, size: 34))
-            .minimumScaleFactor(0.5)
+            .minimumScaleFactor(0.3)
             .lineLimit(1)
             .padding()
-            .frame(minWidth: 50)
+            .frame(width: 61, height: 61)
     }
 
     var teamTwoScoreView: some View {
         Text(scoreText(for: teamTwoScore))
             .font(.drukWide(.bold, size: 34))
-            .minimumScaleFactor(0.5)
+            .minimumScaleFactor(0.3)
             .lineLimit(1)
             .padding()
-            .frame(minWidth: 50)
+            .frame(width: 61, height: 61)
     }
 
     var matchTag: some View {
