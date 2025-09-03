@@ -7,8 +7,12 @@ class ScoreCardListViewModel {
 
     var matches: [Match] = []
     var groupedMatches: [MatchSection] = []
+    var isLoading: Bool = true
 
     func fetchMatches() async {
+        isLoading = true
+        defer { isLoading = false }
+        
         matches = try! await DataSourceFactory.matchesDataSource().execute()
         groupMatchesByLeague()
     }
