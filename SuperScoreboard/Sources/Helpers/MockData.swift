@@ -47,7 +47,7 @@ class MockData {
     }
     
     // MARK: - Fallback Match Creation
-    private static func createFallbackMatch(_ status: MatchStatus = .inProgress) -> Match {
+    static func createFallbackMatch(_ status: MatchStatus = .inProgress) -> Match {
         let statusValue = status.rawValue
         let hasScores = status.hasScores
         let scoreValue = hasScores ? "1" : "null"
