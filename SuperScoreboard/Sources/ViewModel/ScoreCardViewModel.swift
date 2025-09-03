@@ -63,9 +63,10 @@ class ScoreCardViewModel {
         if match.status.isActive {
             return match.clock?.label ?? "Live"
         } else if match.status.isUpcoming {
-            return match.kickoff.label
+            return kickoffTimeText
         } else {
-            return match.clock?.label ?? "FT"
+            // For completed matches, show extra time or "FT"
+            return calculateExtraTime() ?? "FT"
         }
     }
 
@@ -97,6 +98,26 @@ class ScoreCardViewModel {
         formatter.timeStyle = .short
         formatter.dateStyle = .none
         return formatter.string(from: date)
+    }
+    
+    private func calculateExtraTime() -> String? {
+        guard let clock = match.clock else { return nil }
+        
+        // Standard match duration is 90 minutes (5400 seconds)
+        let standardMatchDuration = 5400
+        
+        // If the match went beyond standard time, calculate extra time
+        if clock.secs > standardMatchDuration {
+            let extraSeconds = clock.secs - standardMatchDuration
+            let extraMinutes = extraSeconds / 60
+            let remainingSeconds = extraSeconds % 60
+            
+            // Format as "+5'00" style
+            return String(format: "+%d'%02d", extraMinutes, remainingSeconds)
+        }
+        
+        // If match ended within regular time, show "FT"
+        return "FT"
     }
     
     // MARK: - Match Status Helpers
