@@ -5,11 +5,14 @@ extension Font {
     /// Selecta Trial font family
     enum Selecta {
         case medium
-        
+        case regular
+
         var fontName: String {
             switch self {
             case .medium:
                 return "SelectaTrialUnlicensed-Medium"
+            case .regular:
+                return "SelectaTrialUnlicensed-Regular"
             }
         }
         
