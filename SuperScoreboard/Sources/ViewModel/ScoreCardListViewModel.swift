@@ -20,7 +20,7 @@ class ScoreCardListViewModel {
     // MARK: - Error Recovery Properties
     var retryCount = 0
     var maxRetries = 3
-    private var lastSuccessfulFetch: [Match] = []
+    internal var lastSuccessfulFetch: [Match] = []
     
     // MARK: - Public Methods
     
@@ -71,7 +71,7 @@ class ScoreCardListViewModel {
         }
     }
     
-    private func handleFetchError(_ error: Error) async {
+    internal func handleFetchError(_ error: Error) async {
         let appError = convertToAppError(error)
         
         // If we have cached data, show error but keep data
