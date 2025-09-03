@@ -1,0 +1,314 @@
+[
+  {
+    "id": 1,
+    "kickoff": {
+      "completeness": 3,
+      "millis": 1704722400000,
+      "label": "Live"
+    },
+    "competition": {
+      "id": 1,
+      "title": "Premier League"
+    },
+    "teams": [
+      {
+        "team": {
+          "id": 1,
+          "name": "Paris Saint-Germain",
+          "shortName": "PSG",
+          "teamType": "FIRST",
+          "club": {
+            "id": 1,
+            "name": "Paris Saint-Germain",
+            "abbr": "PSG",
+            "shortName": "Paris SG"
+          },
+          "altIds": {
+            "opta": "t1"
+          }
+        },
+        "score": 2
+      },
+      {
+        "team": {
+          "id": 2,
+          "name": "Arsenal",
+          "shortName": "ARS",
+          "teamType": "FIRST",
+          "club": {
+            "id": 2,
+            "name": "Arsenal",
+            "abbr": "ARS",
+            "shortName": "Arsenal"
+          },
+          "altIds": {
+            "opta": "t2"
+          }
+        },
+        "score": 1
+      }
+    ],
+    "ground": {
+      "id": 1,
+      "name": "Parc des Princes",
+      "city": "Paris",
+      "source": "opta"
+    },
+    "status": "L",
+    "attendance": 47929,
+    "clock": {
+      "secs": 720,
+      "label": "12'"
+    },
+    "goals": null
+  },
+  {
+    "id": 2,
+    "kickoff": {
+      "completeness": 3,
+      "millis": 1704726000000,
+      "label": "15:00"
+    },
+    "competition": {
+      "id": 1,
+      "title": "Premier League"
+    },
+    "teams": [
+      {
+        "team": {
+          "id": 3,
+          "name": "Manchester United",
+          "shortName": "MAN",
+          "teamType": "FIRST",
+          "club": {
+            "id": 3,
+            "name": "Manchester United",
+            "abbr": "MAN",
+            "shortName": "Man Utd"
+          },
+          "altIds": {
+            "opta": "t3"
+          }
+        },
+        "score": null
+      },
+      {
+        "team": {
+          "id": 4,
+          "name": "Liverpool",
+          "shortName": "LIV",
+          "teamType": "FIRST",
+          "club": {
+            "id": 4,
+            "name": "Liverpool",
+            "abbr": "LIV",
+            "shortName": "Liverpool"
+          },
+          "altIds": {
+            "opta": "t4"
+          }
+        },
+        "score": null
+      }
+    ],
+    "ground": {
+      "id": 2,
+      "name": "Old Trafford",
+      "city": "Manchester",
+      "source": "opta"
+    },
+    "status": "U",
+    "attendance": null,
+    "clock": null,
+    "goals": null
+  },
+  {
+    "id": 3,
+    "kickoff": {
+      "completeness": 3,
+      "millis": 1704715200000,
+      "label": "FT"
+    },
+    "competition": {
+      "id": 2,
+      "title": "UEFA Champions League"
+    },
+    "teams": [
+      {
+        "team": {
+          "id": 5,
+          "name": "FC Barcelona",
+          "shortName": "BAR",
+          "teamType": "FIRST",
+          "club": {
+            "id": 5,
+            "name": "FC Barcelona",
+            "abbr": "BAR",
+            "shortName": "Barcelona"
+          },
+          "altIds": {
+            "opta": "t5"
+          }
+        },
+        "score": 3
+      },
+      {
+        "team": {
+          "id": 6,
+          "name": "Real Madrid",
+          "shortName": "RMA",
+          "teamType": "FIRST",
+          "club": {
+            "id": 6,
+            "name": "Real Madrid",
+            "abbr": "RMA",
+            "shortName": "Real Madrid"
+          },
+          "altIds": {
+            "opta": "t6"
+          }
+        },
+        "score": 2
+      }
+    ],
+    "ground": {
+      "id": 3,
+      "name": "Camp Nou",
+      "city": "Barcelona",
+      "source": "opta"
+    },
+    "status": "C",
+    "attendance": 99354,
+    "clock": {
+      "secs": 5400,
+      "label": "FT"
+    },
+    "goals": null
+  },
+  {
+    "id": 4,
+    "kickoff": {
+      "completeness": 3,
+      "millis": 1704722400000,
+      "label": "Live"
+    },
+    "competition": {
+      "id": 1,
+      "title": "Premier League"
+    },
+    "teams": [
+      {
+        "team": {
+          "id": 3,
+          "name": "Manchester United",
+          "shortName": "MAN",
+          "teamType": "FIRST",
+          "club": {
+            "id": 3,
+            "name": "Manchester United",
+            "abbr": "MAN",
+            "shortName": "Man Utd"
+          },
+          "altIds": {
+            "opta": "t3"
+          }
+        },
+        "score": 127
+      },
+      {
+        "team": {
+          "id": 2,
+          "name": "Arsenal",
+          "shortName": "ARS",
+          "teamType": "FIRST",
+          "club": {
+            "id": 2,
+            "name": "Arsenal",
+            "abbr": "ARS",
+            "shortName": "Arsenal"
+          },
+          "altIds": {
+            "opta": "t2"
+          }
+        },
+        "score": 99
+      }
+    ],
+    "ground": {
+      "id": 2,
+      "name": "Old Trafford",
+      "city": "Manchester",
+      "source": "opta"
+    },
+    "status": "L",
+    "attendance": 76000,
+    "clock": {
+      "secs": 2700,
+      "label": "45'"
+    },
+    "goals": null
+  },
+  {
+    "id": 5,
+    "kickoff": {
+      "completeness": 3,
+      "millis": 1704720600000,
+      "label": "Pens"
+    },
+    "competition": {
+      "id": 2,
+      "title": "UEFA Champions League"
+    },
+    "teams": [
+      {
+        "team": {
+          "id": 1,
+          "name": "Paris Saint-Germain",
+          "shortName": "PSG",
+          "teamType": "FIRST",
+          "club": {
+            "id": 1,
+            "name": "Paris Saint-Germain",
+            "abbr": "PSG",
+            "shortName": "Paris SG"
+          },
+          "altIds": {
+            "opta": "t1"
+          }
+        },
+        "score": 1
+      },
+      {
+        "team": {
+          "id": 5,
+          "name": "FC Barcelona",
+          "shortName": "BAR",
+          "teamType": "FIRST",
+          "club": {
+            "id": 5,
+            "name": "FC Barcelona",
+            "abbr": "BAR",
+            "shortName": "Barcelona"
+          },
+          "altIds": {
+            "opta": "t5"
+          }
+        },
+        "score": 1
+      }
+    ],
+    "ground": {
+      "id": 1,
+      "name": "Parc des Princes",
+      "city": "Paris",
+      "source": "opta"
+    },
+    "status": "C",
+    "attendance": 47929,
+    "clock": {
+      "secs": 6300,
+      "label": "Pens"
+    },
+    "goals": null
+  }
+]
