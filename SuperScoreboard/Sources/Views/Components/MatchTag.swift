@@ -9,30 +9,41 @@ import SwiftUI
 import Domain
 
 struct MatchTag: View {
-    let match: Match
+    @Environment(ScoreCardViewModel.self) private var viewModel
     
     var body: some View {
         HStack {
-            teamOneScoreView
-            matchTag
-            teamTwoScoreView
+            if viewModel.shouldShowScores {
+                teamOneScoreView
+                matchTag
+                teamTwoScoreView
+            } else {
+                kickoffTimeView
+            }
         }
     }
 }
 
 #Preview {
     VStack(spacing: 20) {
-        MatchTag(match: MockData.Previews.liveScenario)
-        MatchTag(match: MockData.Previews.upcomingScenario)
-        MatchTag(match: MockData.Previews.finishedScenario)
-        MatchTag(match: MockData.Previews.highScoreScenario)
+        MatchTag()
+            .environment(ScoreCardViewModel(match: MockData.Previews.liveScenario))
+        
+        MatchTag()
+            .environment(ScoreCardViewModel(match: MockData.Previews.upcomingScenario))
+        
+        MatchTag()
+            .environment(ScoreCardViewModel(match: MockData.Previews.finishedScenario))
+        
+        MatchTag()
+            .environment(ScoreCardViewModel(match: MockData.Previews.highScoreScenario))
     }
 }
 
 // MARK: Subviews
 private extension MatchTag {
     var teamOneScoreView: some View {
-        Text(scoreText(for: teamOneScore))
+        Text(viewModel.scoreText(for: viewModel.teamOneScore))
             .font(.drukWide(.bold, size: 34))
             .minimumScaleFactor(0.3)
             .lineLimit(1)
@@ -41,7 +52,7 @@ private extension MatchTag {
     }
 
     var teamTwoScoreView: some View {
-        Text(scoreText(for: teamTwoScore))
+        Text(viewModel.scoreText(for: viewModel.teamTwoScore))
             .font(.drukWide(.bold, size: 34))
             .minimumScaleFactor(0.3)
             .lineLimit(1)
@@ -50,7 +61,7 @@ private extension MatchTag {
     }
 
     var matchTag: some View {
-        Text("12'")
+        Text(viewModel.matchTagText)
             .font(.selecta(.regular, size: 12))
             .padding(.horizontal, 8)
             .padding(.top, 2)
@@ -58,33 +69,20 @@ private extension MatchTag {
             .foregroundColor(.white)
             .background {
                 RoundedRectangle(cornerRadius: 4)
-                    .foregroundStyle(matchTagColor)
+                    .foregroundStyle(viewModel.matchTagColor)
             }
     }
-
-    var matchTagColor: Color {
-        match.status.isActive ? Color(hex: "#BF1F25") : Color.secondary
-    }
-}
-
-// MARK: Computed properties
-private extension MatchTag {
-
-    var teamOneScore: Int? {
-        guard match.teams.count > 0 else { return nil }
-        return match.teams[0].score
-    }
-
-    var teamTwoScore: Int? {
-        guard match.teams.count > 1 else { return nil }
-        return match.teams[1].score
-    }
-}
-
-// MARK: Methods
-private extension MatchTag {
-    func scoreText(for score: Int?) -> String {
-        guard let score = score else { return "-" }
-        return "\(score)"
+    
+    var kickoffTimeView: some View {
+        Text(viewModel.kickoffTimeText)
+            .font(.selecta(.regular, size: 14))
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .frame(height: 32, alignment: .center)
+            .foregroundColor(.white)
+            .background {
+                RoundedRectangle(cornerRadius: 4)
+                    .foregroundStyle(viewModel.matchTagColor)
+            }
     }
 }
