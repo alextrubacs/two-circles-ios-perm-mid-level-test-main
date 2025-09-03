@@ -16,21 +16,13 @@ struct ContentView: View {
                             .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
                     }
                 }
+                .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 4, trailing: 0))
             }
         }
         .listStyle(.insetGrouped)
         .task {
             await viewModel.fetchMatches()
         }
-    }
-    
-    // MARK: - Section Header
-    private func sectionHeader(title: String) -> some View {
-        Text(title)
-            .font(.headline)
-            .fontWeight(.bold)
-            .foregroundColor(.primary)
-            .textCase(nil)
     }
 }
 
