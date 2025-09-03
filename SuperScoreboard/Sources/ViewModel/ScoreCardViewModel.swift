@@ -81,7 +81,22 @@ class ScoreCardViewModel {
     
     // MARK: - Kickoff Time Display
     var kickoffTimeText: String {
+        // Try to extract time from millis first
+        if let timeFromMillis = extractTimeFromMillis() {
+            return timeFromMillis
+        }
+        
+        // Final fallback to the raw label
         return match.kickoff.label
+    }
+    
+    // MARK: - Private Helper Methods
+    private func extractTimeFromMillis() -> String? {
+        let date = Date(timeIntervalSince1970: TimeInterval(match.kickoff.millis / 1000))
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
+        return formatter.string(from: date)
     }
     
     // MARK: - Match Status Helpers
