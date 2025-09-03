@@ -63,12 +63,7 @@ private extension MatchTag {
     }
 
     var matchTagColor: Color {
-        switch match.status {
-        case "L": return Color(hex: "BF1F25") // Red for live
-        case "U": return Color(hex: "007AFF") // Blue for upcoming
-        case "C": return Color(hex: "34C759") // Green for completed
-        default: return Color(hex: "6B7280")  // Gray for unknown
-        }
+        match.status.isActive ? Color(hex: "#BF1F25") : Color.secondary
     }
 }
 
