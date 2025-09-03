@@ -9,7 +9,7 @@ extension Font {
         var fontName: String {
             switch self {
             case .bold:
-                return "DrukWide-Bold-Trial"
+                return "DrukWideTrial-Bold"
             }
         }
         
