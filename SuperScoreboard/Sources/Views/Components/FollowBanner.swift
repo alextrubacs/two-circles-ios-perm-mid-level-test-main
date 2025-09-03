@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct FollowBanner: View {
+    let buttonPressed: () -> Void
+    
     var body: some View {
         background
             .overlay(alignment: .leading) {
@@ -18,8 +20,10 @@ struct FollowBanner: View {
 }
 
 #Preview {
-    FollowBanner()
-        .padding()
+    FollowBanner {
+        print("Follow button tapped!")
+    }
+    .padding()
 }
 
 private extension FollowBanner {
@@ -43,12 +47,28 @@ private extension FollowBanner {
     }
 
     var content: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Follow your favourites")
-                .font(.selecta(.bold, size: 16))
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Follow your favourites")
+                    .font(.selecta(.bold, size: 16))
 
-            Text("Add your favourite athletes,\nteams & competitions to see the\nscores you care about")
-                .font(.selecta(.regular, size: 12))
+                Text("Add your favourite athletes,\nteams & competitions to see the\nscores you care about")
+                    .font(.selecta(.regular, size: 12))
+            }
+            .foregroundStyle(.white)
+
+            Spacer()
+
+             Button {
+                 buttonPressed()
+             } label: {
+                Text("Start following")
+                    .font(.selecta(.medium, size: 13))
+                    .foregroundStyle(Color(hex: "1C1B19"))
+            }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+            .tint(.white)
         }
     }
 }
