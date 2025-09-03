@@ -54,7 +54,7 @@
       "city": "Paris",
       "source": "opta"
     },
-    "status": "L",
+    "status": "I",
     "attendance": 47929,
     "clock": {
       "secs": 720,
@@ -240,7 +240,7 @@
       "city": "Manchester",
       "source": "opta"
     },
-    "status": "L",
+    "status": "I",
     "attendance": 76000,
     "clock": {
       "secs": 2700,
