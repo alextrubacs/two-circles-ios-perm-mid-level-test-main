@@ -12,15 +12,15 @@ struct MatchTag: View {
     @Environment(ScoreCardViewModel.self) private var viewModel
     
     var body: some View {
-        HStack {
+        HStack(spacing: 10) {
             if viewModel.shouldShowScores {
                 teamOneScoreView
                 matchTag
                 teamTwoScoreView
             } else {
-                teamOneScoreView
+                teamOneAbbr
                 kickoffTimeView
-                teamTwoScoreView
+                teamTwoAbbr
             }
         }
     }
@@ -55,6 +55,22 @@ private extension MatchTag {
     var teamTwoScoreView: some View {
         Text(viewModel.scoreText(for: viewModel.teamTwoScore))
             .font(.drukWide(.bold, size: 34))
+            .minimumScaleFactor(0.3)
+            .lineLimit(1)
+            .frame(width: 61, height: 61)
+    }
+
+    var teamOneAbbr: some View {
+        Text(viewModel.clubOneName)
+            .font(.drukWide(.bold, size: 16))
+            .minimumScaleFactor(0.3)
+            .lineLimit(1)
+            .frame(width: 61, height: 61)
+    }
+
+    var teamTwoAbbr: some View {
+        Text(viewModel.clubTwoName)
+            .font(.drukWide(.bold, size: 16))
             .minimumScaleFactor(0.3)
             .lineLimit(1)
             .frame(width: 61, height: 61)
