@@ -4,45 +4,12 @@ import SwiftUI
 extension Font {
     /// Selecta Trial font family
     enum Selecta {
-        case thin
-        case thinItalic
-        case light
-        case lightItalic
-        case regular
-        case italic
         case medium
-        case mediumItalic
-        case bold
-        case boldItalic
-        case black
-        case blackItalic
         
         var fontName: String {
             switch self {
-            case .thin:
-                return "SelectaTrialUnlicensed-Thin"
-            case .thinItalic:
-                return "SelectaTrialUnlicensed-ThinItalic"
-            case .light:
-                return "SelectaTrialUnlicensed-Light"
-            case .lightItalic:
-                return "SelectaTrialUnlicensed-LightItalic"
-            case .regular:
-                return "SelectaTrialUnlicensed-Regular"
-            case .italic:
-                return "SelectaTrialUnlicensed-Italic"
             case .medium:
                 return "SelectaTrialUnlicensed-Medium"
-            case .mediumItalic:
-                return "SelectaTrialUnlicensed-MediumItalic"
-            case .bold:
-                return "SelectaTrialUnlicensed-Bold"
-            case .boldItalic:
-                return "SelectaTrialUnlicensed-BoldItalic"
-            case .black:
-                return "SelectaTrialUnlicensed-Black"
-            case .blackItalic:
-                return "SelectaTrialUnlicensed-BlackItalic"
             }
         }
         
