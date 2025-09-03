@@ -6,24 +6,62 @@
 //
 
 import SwiftUI
+import Domain
 
 struct ScoreCard: View {
+    let match: Match
+
     var body: some View {
-        VStack(spacing: 10) {
-            HStack {
-                ClubBadge(
-                    imageName: "Paris_Saint-Germain",
-                    clubName: "PSG"
-                )
-                Text("2")
-                    .font(.drukWide(.bold, size: 34))
-            }
+        HStack(alignment: .center) {
+            ClubBadge(
+                imageName: teamOneName,
+                clubName: clubOneName
+            )
+
+            MatchTag(match: match)
+
+            ClubBadge(
+                imageName: teamTwoName,
+                clubName: clubTwoName
+            )
         }
     }
 }
 
 #Preview {
-    ScoreCard()
+    VStack(spacing: 20) {
+        ScoreCard(match: MockData.Previews.liveScenario)
+        ScoreCard(match: MockData.Previews.upcomingScenario)
+        ScoreCard(match: MockData.Previews.finishedScenario)
+        ScoreCard(match: MockData.Previews.highScoreScenario)
+    }
+    .padding()
 }
 
+// MARK: Subviews
+private extension ScoreCard {
 
+}
+
+// MARK: Computed properties
+private extension ScoreCard {
+    var teamOneName: String {
+        guard match.teams.count > 0 else { return "Unknown" }
+        return match.teams[0].team.name
+    }
+    
+    var teamTwoName: String {
+        guard match.teams.count > 1 else { return "Unknown" }
+        return match.teams[1].team.name
+    }
+    
+    var clubOneName: String {
+        guard match.teams.count > 0 else { return "UNK" }
+        return match.teams[0].team.club.abbr
+    }
+    
+    var clubTwoName: String {
+        guard match.teams.count > 1 else { return "UNK" }
+        return match.teams[1].team.club.abbr
+    }
+}
