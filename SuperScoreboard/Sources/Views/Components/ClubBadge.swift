@@ -14,7 +14,9 @@ struct ClubBadge: View {
     var body: some View {
         VStack {
             Image(imageName)
-                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 40, height: 40)
 
             Text(clubName)
                 .font(.selecta(.medium, size: 14))
