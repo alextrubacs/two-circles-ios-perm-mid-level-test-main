@@ -19,7 +19,7 @@ struct TrapezoidShape: Shape {
 
         // Define the trapezoid with wider top than bottom
         let topInset: CGFloat = 0      // No inset on top (full width)
-        let bottomInset: CGFloat = 20  // Inset on bottom (narrower)
+        let bottomInset: CGFloat = 8  // Inset on bottom (narrower)
         let radius = min(cornerRadius, rect.height / 4) // Ensure radius doesn't exceed shape bounds
 
         // Define corner points (centers of the corner arcs)
@@ -81,4 +81,11 @@ struct TrapezoidShape: Shape {
 
         return path
     }
+}
+
+#Preview {
+    FollowBanner {
+        print("Follow button tapped!")
+    }
+    .padding()
 }
