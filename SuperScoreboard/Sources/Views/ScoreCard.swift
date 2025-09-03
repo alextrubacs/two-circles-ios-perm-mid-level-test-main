@@ -9,20 +9,25 @@ import SwiftUI
 import Domain
 
 struct ScoreCard: View {
-    let match: Match
+    @State private var viewModel: ScoreCardViewModel
+    
+    init(match: Match) {
+        self._viewModel = State(initialValue: ScoreCardViewModel(match: match))
+    }
 
     var body: some View {
         HStack(alignment: .center) {
             ClubBadge(
-                imageName: teamOneName,
-                clubName: clubOneName
+                imageName: viewModel.teamOneName,
+                clubName: viewModel.shouldShowClubNames ? viewModel.clubOneName : ""
             )
 
-            MatchTag(match: match)
+            MatchTag()
+                .environment(viewModel)
 
             ClubBadge(
-                imageName: teamTwoName,
-                clubName: clubTwoName
+                imageName: viewModel.teamTwoName,
+                clubName: viewModel.shouldShowClubNames ? viewModel.clubTwoName : ""
             )
         }
     }
@@ -36,27 +41,4 @@ struct ScoreCard: View {
         ScoreCard(match: MockData.Previews.highScoreScenario)
     }
     .padding()
-}
-
-// MARK: Computed properties
-private extension ScoreCard {
-    var teamOneName: String {
-        guard match.teams.count > 0 else { return "Unknown" }
-        return match.teams[0].team.name
-    }
-    
-    var teamTwoName: String {
-        guard match.teams.count > 1 else { return "Unknown" }
-        return match.teams[1].team.name
-    }
-    
-    var clubOneName: String {
-        guard match.teams.count > 0 else { return "UNK" }
-        return match.teams[0].team.club.abbr
-    }
-    
-    var clubTwoName: String {
-        guard match.teams.count > 1 else { return "UNK" }
-        return match.teams[1].team.club.abbr
-    }
 }
