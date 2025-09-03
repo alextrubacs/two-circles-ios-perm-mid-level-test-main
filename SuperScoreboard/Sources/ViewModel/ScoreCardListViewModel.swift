@@ -1,5 +1,4 @@
-import Observation
-import Foundation
+import SwiftUI
 import Domain
 
 @Observable
@@ -7,8 +6,18 @@ class ScoreCardListViewModel {
 
     var matches: [Match] = []
     var groupedMatches: [MatchSection] = []
+    var isLoading: Bool = true
 
     func fetchMatches() async {
+        withAnimation {
+            isLoading = true
+        }
+        defer {
+            withAnimation {
+                isLoading = false
+            }
+        }
+        
         matches = try! await DataSourceFactory.matchesDataSource().execute()
         groupMatchesByLeague()
     }
