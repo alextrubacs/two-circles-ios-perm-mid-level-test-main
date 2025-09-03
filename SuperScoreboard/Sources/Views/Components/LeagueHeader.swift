@@ -18,6 +18,7 @@ struct LeagueHeader: View {
             Text(title.capitalized)
                 .font(.selecta(.medium, size: 16))
                 .foregroundStyle(Color(hex: "1C1B19"))
+                .textCase(nil)
 
             Spacer()
 
