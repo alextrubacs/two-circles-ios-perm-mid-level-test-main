@@ -20,15 +20,15 @@ class MockData {
     
     // MARK: - Individual Match Accessors
     static var liveMatch: Match {
-        matches.first { $0.status == "L" && $0.id == 1 } ?? matches[0]
+        matches.first { $0.status == .inProgress && $0.id == 1 } ?? matches[0]
     }
     
     static var upcomingMatch: Match {
-        matches.first { $0.status == "U" } ?? matches[1]
+        matches.first { $0.status == .upcoming } ?? matches[1]
     }
     
     static var finishedMatch: Match {
-        matches.first { $0.status == "C" && $0.id == 3 } ?? matches[2]
+        matches.first { $0.status == .completed && $0.id == 3 } ?? matches[2]
     }
     
     static var highScoringMatch: Match {
@@ -66,23 +66,23 @@ class MockData {
     }
     
     /// Get matches by status
-    static func matches(withStatus status: String) -> [Match] {
+    static func matches(withStatus status: MatchStatus) -> [Match] {
         matches.filter { $0.status == status }
     }
     
     /// Get live matches
     static var liveMatches: [Match] {
-        matches(withStatus: "L")
+        matches(withStatus: .inProgress)
     }
     
     /// Get upcoming matches
     static var upcomingMatches: [Match] {
-        matches(withStatus: "U")
+        matches(withStatus: .upcoming)
     }
     
     /// Get finished matches
     static var finishedMatches: [Match] {
-        matches(withStatus: "C")
+        matches(withStatus: .completed)
     }
 }
 
