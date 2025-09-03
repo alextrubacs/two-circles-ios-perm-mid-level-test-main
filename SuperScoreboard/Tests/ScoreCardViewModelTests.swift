@@ -414,6 +414,230 @@ struct ScoreCardViewModelTests {
         #expect(viewModel.isLoading == false) // Defer executed
         #expect(viewModel.deferExecuted == true) // Confirm defer ran
     }
+    
+    // MARK: - Error Handling Tests
+    
+    @Test("ScoreCardListViewModel handles network failures gracefully")
+    func testNetworkFailureHandling() async {
+        // Given
+        let viewModel = TestableScoreCardListViewModel()
+        viewModel.shouldSimulateNetworkFailure = true
+        viewModel.maxRetries = 0 // Disable retries to test immediate error state
+        
+        // When
+        await viewModel.fetchMatches()
+        
+        // Then
+        #expect(viewModel.isLoading == false)
+        #expect(viewModel.errorState == .error(.networkFailure("Failed to fetch match data: Network failure")))
+        #expect(viewModel.matches.isEmpty) // No data should be loaded
+    }
+    
+    @Test("ScoreCardListViewModel handles data parsing errors gracefully")
+    func testDataParsingErrorHandling() async {
+        // Given
+        let viewModel = TestableScoreCardListViewModel()
+        viewModel.shouldSimulateParsingError = true
+        viewModel.maxRetries = 0 // Disable retries to test immediate error state
+        
+        // When
+        await viewModel.fetchMatches()
+        
+        // Then
+        #expect(viewModel.isLoading == false)
+        #expect(viewModel.errorState == .error(.dataParsingError("Failed to parse match data: Parsing error")))
+        #expect(viewModel.matches.isEmpty) // No data should be loaded
+    }
+    
+    @Test("ScoreCardListViewModel handles missing required data")
+    func testRequiredDataValidation() async {
+        // Given
+        let viewModel = TestableScoreCardListViewModel()
+        viewModel.shouldSimulateInvalidData = true
+        viewModel.maxRetries = 0 // Disable retries to test immediate error state
+        
+        // When
+        await viewModel.fetchMatches()
+        
+        // Then
+        #expect(viewModel.isLoading == false)
+        #expect(viewModel.errorState == .error(.missingRequiredData("No match data received from server")))
+        #expect(viewModel.matches.isEmpty) // No data should be loaded
+    }
+    
+    @Test("ScoreCardListViewModel preserves cached data on error")
+    func testCachedDataPreservation() async {
+        // Given
+        let viewModel = TestableScoreCardListViewModel()
+        
+        // First successful fetch
+        await viewModel.fetchMatches()
+        let cachedMatches = viewModel.matches
+        #expect(!cachedMatches.isEmpty)
+        #expect(viewModel.errorState == .none)
+        
+        // When - Simulate network failure on subsequent fetch
+        viewModel.shouldSimulateNetworkFailure = true
+        viewModel.maxRetries = 0 // Disable retries to test immediate error state
+        await viewModel.fetchMatches()
+        
+        // Then - Data should be preserved, error should be shown
+        #expect(viewModel.isLoading == false)
+        #expect(viewModel.matches.count == cachedMatches.count) // Data preserved
+        #expect(viewModel.errorState == .error(.networkFailure("Failed to fetch match data: Network failure")))
+    }
+    
+    @Test("ScoreCardListViewModel retry functionality works correctly")
+    func testRetryFunctionality() async {
+        // Given
+        let viewModel = TestableScoreCardListViewModel()
+        viewModel.shouldSimulateNetworkFailure = true
+        viewModel.maxRetries = 2 // Allow 2 retries
+        
+        // When
+        await viewModel.fetchMatches()
+        
+        // Then
+        #expect(viewModel.isLoading == false)
+        #expect(viewModel.retryCount == viewModel.maxRetries) // All retries attempted
+        #expect(viewModel.errorState == .error(.networkFailure("Failed to fetch match data: Network failure")))
+    }
+    
+    @Test("ScoreCardListViewModel retry after error success scenario")
+    func testRetryAfterErrorSuccess() async {
+        // Given
+        let viewModel = TestableScoreCardListViewModel()
+        viewModel.shouldSimulateNetworkFailure = true
+        viewModel.maxRetries = 0 // Disable automatic retries
+        
+        // First fetch fails
+        await viewModel.fetchMatches()
+        #expect(viewModel.errorState == .error(.networkFailure("Failed to fetch match data: Network failure")))
+        
+        // When - Manual retry with fixed network
+        viewModel.shouldSimulateNetworkFailure = false
+        await viewModel.retryFetch()
+        
+        // Then
+        #expect(viewModel.isLoading == false)
+        #expect(viewModel.errorState == .none)
+        #expect(!viewModel.matches.isEmpty) // Data loaded successfully
+        #expect(viewModel.retryCount == 0) // Reset on success
+    }
+    
+    @Test("ScoreCardListViewModel error dismissal works correctly")
+    func testErrorDismissal() async {
+        // Given
+        let viewModel = TestableScoreCardListViewModel()
+        viewModel.shouldSimulateNetworkFailure = true
+        viewModel.maxRetries = 0
+        
+        // Trigger error
+        await viewModel.fetchMatches()
+        #expect(viewModel.errorState == .error(.networkFailure("Failed to fetch match data: Network failure")))
+        
+        // When
+        viewModel.dismissError()
+        
+        // Then
+        #expect(viewModel.errorState == .none)
+    }
+    
+    @Test("ScoreCardListViewModel error state transitions correctly")
+    func testErrorStateTransitions() async {
+        // Given
+        let viewModel = TestableScoreCardListViewModel()
+        
+        // Initial state
+        #expect(viewModel.errorState == .none)
+        
+        // When - Network failure
+        viewModel.shouldSimulateNetworkFailure = true
+        viewModel.maxRetries = 0
+        await viewModel.fetchMatches()
+        
+        // Then - Error state
+        if case .error(let error) = viewModel.errorState {
+            #expect(error.errorDescription == "Failed to fetch match data: Network failure")
+        } else {
+            #expect(Bool(false), "Should be in error state")
+        }
+        
+        // When - Retry (should go to retrying state first)
+        viewModel.maxRetries = 1
+        let retryTask = Task {
+            await viewModel.retryFetch()
+        }
+        
+        // Check retrying state briefly (this is timing sensitive)
+        if case .retrying(let error) = viewModel.errorState {
+            #expect(error.errorDescription == "Failed to fetch match data: Network failure")
+        }
+        
+        await retryTask.value
+        
+        // Then - Should end in error state after retry fails
+        if case .error(let error) = viewModel.errorState {
+            #expect(error.errorDescription == "Failed to fetch match data: Network failure")
+        } else {
+            #expect(Bool(false), "Should be in error state after failed retry")
+        }
+    }
+    
+    @Test("ScoreCardListViewModel validates match data correctly")
+    func testMatchDataValidation() async {
+        // This test verifies that the validateMatch function works
+        // by using real mock data that should pass validation
+        
+        // Given
+        let viewModel = ScoreCardListViewModel()
+        
+        // When
+        await viewModel.fetchMatches()
+        
+        // Then - All matches should pass validation
+        #expect(viewModel.errorState == .none)
+        #expect(!viewModel.matches.isEmpty)
+        
+        // Verify each match has required data
+        for match in viewModel.matches {
+            #expect(!match.teams.isEmpty, "Match should have teams")
+            for team in match.teams {
+                #expect(!team.team.club.name.isEmpty, "Club name should not be empty")
+            }
+        }
+    }
+    
+    @Test("ScoreCardListViewModel error recovery properties work correctly")
+    func testErrorRecoveryProperties() async {
+        // Given
+        let viewModel = TestableScoreCardListViewModel()
+        
+        // Initial state
+        #expect(viewModel.retryCount == 0)
+        #expect(viewModel.maxRetries == 3)
+        
+        // First successful fetch
+        await viewModel.fetchMatches()
+        let initialMatches = viewModel.matches
+        #expect(!initialMatches.isEmpty)
+        
+        // When - Error occurs
+        viewModel.shouldSimulateNetworkFailure = true
+        viewModel.maxRetries = 0
+        await viewModel.fetchMatches()
+        
+        // Then - Cached data should be preserved
+        #expect(viewModel.matches.count == initialMatches.count)
+        
+        // When - Recovery
+        viewModel.shouldSimulateNetworkFailure = false
+        await viewModel.fetchMatches()
+        
+        // Then - Fresh data loaded, retry count reset
+        #expect(viewModel.retryCount == 0)
+        #expect(viewModel.errorState == .none)
+    }
 }
 
 // MARK: - Testable ViewModel for Advanced Testing
@@ -421,6 +645,9 @@ struct ScoreCardViewModelTests {
 class TestableScoreCardListViewModel: ScoreCardListViewModel {
     var shouldReturnEarly = false
     var deferExecuted = false
+    var shouldSimulateNetworkFailure = false
+    var shouldSimulateParsingError = false
+    var shouldSimulateInvalidData = false
     
     func fetchMatchesWithEarlyReturn() async {
         isLoading = true
@@ -435,5 +662,24 @@ class TestableScoreCardListViewModel: ScoreCardListViewModel {
         
         matches = try! await DataSourceFactory.matchesDataSource().execute()
         groupMatchesByLeague()
+    }
+    
+    override func fetchFreshData() async {
+        if shouldSimulateNetworkFailure {
+            errorState = .error(.networkFailure("Failed to fetch match data: Network failure"))
+            return
+        }
+        
+        if shouldSimulateParsingError {
+            errorState = .error(.dataParsingError("Failed to parse match data: Parsing error"))
+            return
+        }
+        
+        if shouldSimulateInvalidData {
+            errorState = .error(.missingRequiredData("No match data received from server"))
+            return
+        }
+        
+        await super.fetchFreshData()
     }
 }
