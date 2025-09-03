@@ -12,6 +12,7 @@ struct FollowBanner: View {
         background
             .overlay(alignment: .leading) {
                 content
+                    .padding(.horizontal, 24)
             }
     }
 }
@@ -27,16 +28,16 @@ private extension FollowBanner {
             // Background trapezoid shape
             TrapezoidShape()
                 .foregroundStyle(Color(hex: "255AF6"))
-                .frame(height: 96)
+                .frame(height: 86)
 
             TrapezoidShape()
                 .foregroundStyle(.white.opacity(0.1))
-                .frame(height: 96)
+                .frame(height: 86)
                 .mask(alignment: .trailing, {
                     Image("faceoff")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 180, height: 170)
+                        .frame(width: 170, height: 170)
                 })
         }
     }
@@ -44,7 +45,7 @@ private extension FollowBanner {
     var content: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Follow your favourites")
-                .font(.selecta(.medium, size: 16))
+                .font(.selecta(.bold, size: 16))
 
             Text("Add your favourite athletes,\nteams & competitions to see the\nscores you care about")
                 .font(.selecta(.regular, size: 12))
