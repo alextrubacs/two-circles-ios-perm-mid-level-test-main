@@ -18,10 +18,12 @@ struct ClubBadge: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 40, height: 40)
 
-            Text(clubName)
-                .font(.selecta(.medium, size: 14))
-                .opacity(0.88)
-                .foregroundStyle(Color(hex: "3C3C43"))
+            if !clubName.isEmpty {
+                Text(clubName)
+                    .font(.selecta(.medium, size: 14))
+                    .opacity(0.88)
+                    .foregroundStyle(Color(hex: "3C3C43"))
+            }
         }
     }
 }
