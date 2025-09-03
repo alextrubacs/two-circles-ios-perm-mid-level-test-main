@@ -20,6 +20,8 @@ struct ClubBadge: View {
 
             Text(clubName)
                 .font(.selecta(.medium, size: 14))
+                .opacity(0.88)
+                .foregroundStyle(Color(hex: "3C3C43"))
         }
         .padding()
     }
