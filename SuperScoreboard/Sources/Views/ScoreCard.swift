@@ -30,6 +30,7 @@ struct ScoreCard: View {
                 clubName: viewModel.shouldShowClubNames ? viewModel.clubTwoName : ""
             )
         }
+        .frame(height: 96, alignment: .center)
     }
 }
 
