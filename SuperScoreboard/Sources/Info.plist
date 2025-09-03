@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>SelectaTrialUnlicensed-Thin.ttf</string>
+		<string>SelectaTrialUnlicensed-ThinItalic.ttf</string>
+		<string>SelectaTrialUnlicensed-Light.ttf</string>
+		<string>SelectaTrialUnlicensed-LightItalic.ttf</string>
+		<string>SelectaTrialUnlicensed-Regular.ttf</string>
+		<string>SelectaTrialUnlicensed-Italic.ttf</string>
+		<string>SelectaTrialUnlicensed-Medium.ttf</string>
+		<string>SelectaTrialUnlicensed-MediumItalic.ttf</string>
+		<string>SelectaTrialUnlicensed-Bold.ttf</string>
+		<string>SelectaTrialUnlicensed-BoldItalic.ttf</string>
+		<string>SelectaTrialUnlicensed-Black.ttf</string>
+		<string>SelectaTrialUnlicensed-BlackItalic.ttf</string>
+	</array>
+</dict>
+</plist>
