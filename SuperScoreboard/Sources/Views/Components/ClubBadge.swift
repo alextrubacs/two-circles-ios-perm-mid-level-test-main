@@ -23,7 +23,6 @@ struct ClubBadge: View {
                 .opacity(0.88)
                 .foregroundStyle(Color(hex: "3C3C43"))
         }
-        .padding()
     }
 }
 
