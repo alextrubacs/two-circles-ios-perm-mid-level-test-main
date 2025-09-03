@@ -20,23 +20,118 @@ class MockData {
     
     // MARK: - Individual Match Accessors
     static var liveMatch: Match {
-        matches.first { $0.status == .inProgress && $0.id == 1 } ?? matches[0]
+        matches.first { $0.status == .inProgress && $0.id == 1 } ?? 
+        matches.first { $0.status == .inProgress } ?? 
+        matches.first ?? createFallbackMatch(.inProgress)
     }
     
     static var upcomingMatch: Match {
-        matches.first { $0.status == .upcoming } ?? matches[1]
+        matches.first { $0.status == .upcoming } ?? 
+        matches.first ?? createFallbackMatch(.upcoming)
     }
     
     static var finishedMatch: Match {
-        matches.first { $0.status == .completed && $0.id == 3 } ?? matches[2]
+        matches.first { $0.status == .completed && $0.id == 3 } ?? 
+        matches.first { $0.status == .completed } ?? 
+        matches.first ?? createFallbackMatch(.completed)
     }
     
     static var highScoringMatch: Match {
-        matches.first { $0.id == 4 } ?? matches[3]
+        matches.first { $0.id == 4 } ?? 
+        matches.first ?? createFallbackMatch(.inProgress)
     }
     
     static var penaltyMatch: Match {
-        matches.first { $0.clock?.label == "Pens" } ?? matches[4]
+        matches.first { $0.clock?.label == "Pens" } ?? 
+        matches.first ?? createFallbackMatch(.completed)
+    }
+    
+    // MARK: - Fallback Match Creation
+    private static func createFallbackMatch(_ status: MatchStatus = .inProgress) -> Match {
+        let statusValue = status.rawValue
+        let hasScores = status.hasScores
+        let scoreValue = hasScores ? "1" : "null"
+        let clockValue = status.isActive ? """
+            "clock": {
+                "secs": 1800,
+                "label": "30'"
+            },
+        """ : ""
+        
+        let jsonString = """
+        {
+            "id": 999,
+            "kickoff": {
+                "completeness": 3,
+                "millis": 1704722400000,
+                "label": "\(status == .upcoming ? "15:00" : "Live")"
+            },
+            "competition": {
+                "id": 1,
+                "title": "Test League"
+            },
+            "teams": [
+                {
+                    "team": {
+                        "id": 1,
+                        "name": "Team A",
+                        "shortName": "TEA",
+                        "teamType": "FIRST",
+                        "club": {
+                            "id": 1,
+                            "name": "Team A",
+                            "abbr": "TEA",
+                            "shortName": "Team A"
+                        },
+                        "altIds": {
+                            "opta": "t1"
+                        }
+                    },
+                    "score": \(scoreValue)
+                },
+                {
+                    "team": {
+                        "id": 2,
+                        "name": "Team B",
+                        "shortName": "TEB",
+                        "teamType": "FIRST",
+                        "club": {
+                            "id": 2,
+                            "name": "Team B",
+                            "abbr": "TEB",
+                            "shortName": "Team B"
+                        },
+                        "altIds": {
+                            "opta": "t2"
+                        }
+                    },
+                    "score": 0
+                }
+            ],
+            "ground": {
+                "id": 1,
+                "name": "Test Stadium",
+                "city": "Test City",
+                "source": "test"
+            },
+            "status": "\(statusValue)",
+            \(clockValue)
+            "attendance": \(hasScores ? "1000" : "null"),
+            "goals": null
+        }
+        """
+        
+        do {
+            let data = jsonString.data(using: .utf8)!
+            let decoder = JSONDecoder()
+            return try decoder.decode(Match.self, from: data)
+        } catch {
+            print("❌ MockData: Failed to create fallback match - \(error)")
+            // If even this fails, we have a serious problem
+            // Return the first match from the array if it exists, otherwise crash intentionally
+            // This should never happen in practice
+            fatalError("Unable to create fallback match: \(error)")
+        }
     }
     
     // MARK: - JSON Loading
