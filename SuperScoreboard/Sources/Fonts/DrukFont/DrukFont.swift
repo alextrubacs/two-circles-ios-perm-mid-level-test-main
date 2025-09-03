@@ -17,20 +17,10 @@ extension Font {
         func font(size: CGFloat) -> Font {
             return Font.custom(fontName, size: size)
         }
-        
-        /// Create a SwiftUI Font with the specified text style
-        func font(_ style: Font.TextStyle) -> Font {
-            return Font.custom(fontName, size: style.size)
-        }
     }
     
     /// Convenience method to create Druk Wide fonts
     static func drukWide(_ weight: DrukWide, size: CGFloat) -> Font {
         return weight.font(size: size)
-    }
-    
-    /// Convenience method to create Druk Wide fonts with text style
-    static func drukWide(_ weight: DrukWide, style: Font.TextStyle) -> Font {
-        return weight.font(style)
     }
 }
