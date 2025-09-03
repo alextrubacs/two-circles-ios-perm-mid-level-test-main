@@ -23,6 +23,7 @@ struct MatchTag: View {
                 teamTwoAbbr
             }
         }
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 }
 
@@ -45,60 +46,69 @@ struct MatchTag: View {
 // MARK: Subviews
 private extension MatchTag {
     var teamOneScoreView: some View {
-        Text(viewModel.scoreText(for: viewModel.teamOneScore))
-            .font(.drukWide(.bold, size: 34))
-            .minimumScaleFactor(0.3)
-            .lineLimit(1)
-            .frame(width: 61, height: 61)
+        teamDisplayView(
+            text: viewModel.scoreText(for: viewModel.teamOneScore),
+            fontSize: 34
+        )
     }
 
     var teamTwoScoreView: some View {
-        Text(viewModel.scoreText(for: viewModel.teamTwoScore))
-            .font(.drukWide(.bold, size: 34))
-            .minimumScaleFactor(0.3)
-            .lineLimit(1)
-            .frame(width: 61, height: 61)
+        teamDisplayView(
+            text: viewModel.scoreText(for: viewModel.teamTwoScore),
+            fontSize: 34
+        )
     }
 
     var teamOneAbbr: some View {
-        Text(viewModel.clubOneName)
-            .font(.drukWide(.bold, size: 16))
-            .minimumScaleFactor(0.3)
-            .lineLimit(1)
-            .frame(width: 61, height: 61)
+        teamDisplayView(
+            text: viewModel.clubOneName,
+            fontSize: 16
+        )
     }
 
     var teamTwoAbbr: some View {
-        Text(viewModel.clubTwoName)
-            .font(.drukWide(.bold, size: 16))
+        teamDisplayView(
+            text: viewModel.clubTwoName,
+            fontSize: 16
+        )
+    }
+    
+    // MARK: - Reusable Components
+    func teamDisplayView(text: String, fontSize: CGFloat) -> some View {
+        Text(text)
+            .font(.drukWide(.bold, size: fontSize))
             .minimumScaleFactor(0.3)
             .lineLimit(1)
             .frame(width: 61, height: 61)
     }
 
     var matchTag: some View {
-        Text(viewModel.matchTagText)
-            .font(.selecta(.regular, size: 12))
-            .padding(.horizontal, 8)
-            .padding(.top, 2)
-            .frame(width: 48, height: 24, alignment: .center)
-            .foregroundColor(.white)
-            .background {
-                RoundedRectangle(cornerRadius: 4)
-                    .foregroundStyle(viewModel.matchTagColor)
-            }
+        tagView(
+            text: viewModel.matchTagText,
+            textColor: .white,
+            backgroundColor: viewModel.matchTagColor
+        )
     }
     
     var kickoffTimeView: some View {
-        Text(viewModel.kickoffTimeText)
+        tagView(
+            text: viewModel.kickoffTimeText,
+            textColor: .black,
+            backgroundColor: viewModel.matchTagColor
+        )
+    }
+    
+    // MARK: - Reusable Tag Component
+    func tagView(text: String, textColor: Color, backgroundColor: Color) -> some View {
+        Text(text)
             .font(.selecta(.regular, size: 12))
             .padding(.horizontal, 8)
             .padding(.top, 2)
             .frame(width: 48, height: 24, alignment: .center)
-            .foregroundColor(.white)
+            .foregroundColor(textColor)
             .background {
                 RoundedRectangle(cornerRadius: 4)
-                    .foregroundStyle(viewModel.matchTagColor)
+                    .foregroundStyle(backgroundColor)
             }
     }
 }
