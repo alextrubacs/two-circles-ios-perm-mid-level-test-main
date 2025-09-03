@@ -3,7 +3,7 @@ import Foundation
 import Domain
 
 @Observable
-class ContentViewModel {
+class ScoreCardListViewModel {
 
     var matches: [Match] = []
     var groupedMatches: [MatchSection] = []
