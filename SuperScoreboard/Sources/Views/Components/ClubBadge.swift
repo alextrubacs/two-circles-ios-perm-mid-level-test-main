@@ -19,7 +19,7 @@ struct ClubBadge: View {
             Text(clubName)
                 .font(.selecta(.medium, size: 14))
         }
-
+        .padding()
     }
 }
 

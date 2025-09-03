@@ -6,7 +6,7 @@ struct ContentView: View {
 
     var body: some View {
         List (viewModel.matches, id: \.id) { match in
-            ScoreCard()
+            ScoreCard(match: match)
         }
         .task {
             await viewModel.fetchMatches()

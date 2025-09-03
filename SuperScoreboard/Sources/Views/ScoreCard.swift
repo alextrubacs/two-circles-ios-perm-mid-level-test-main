@@ -38,11 +38,6 @@ struct ScoreCard: View {
     .padding()
 }
 
-// MARK: Subviews
-private extension ScoreCard {
-
-}
-
 // MARK: Computed properties
 private extension ScoreCard {
     var teamOneName: String {
