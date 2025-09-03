@@ -71,7 +71,16 @@ class ScoreCardViewModel {
     }
 
     var matchTagColor: Color {
-        match.status == .inProgress ? Color(hex: "BF1F25") : Color.secondary
+        switch match.status {
+        case .upcoming:
+            Color(hex: "787880").opacity(0.2)
+        case .inProgress:
+            Color(hex: "BF1F25")
+        case .completed:
+            Color.green
+        @unknown default:
+            Color(hex: "787880").opacity(0.2)
+        }
     }
     
     // MARK: - Score Display Text
