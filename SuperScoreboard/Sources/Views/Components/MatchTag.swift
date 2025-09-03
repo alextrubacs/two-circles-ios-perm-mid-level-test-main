@@ -18,7 +18,9 @@ struct MatchTag: View {
                 matchTag
                 teamTwoScoreView
             } else {
+                teamOneScoreView
                 kickoffTimeView
+                teamTwoScoreView
             }
         }
     }
@@ -47,7 +49,6 @@ private extension MatchTag {
             .font(.drukWide(.bold, size: 34))
             .minimumScaleFactor(0.3)
             .lineLimit(1)
-            .padding()
             .frame(width: 61, height: 61)
     }
 
@@ -56,7 +57,6 @@ private extension MatchTag {
             .font(.drukWide(.bold, size: 34))
             .minimumScaleFactor(0.3)
             .lineLimit(1)
-            .padding()
             .frame(width: 61, height: 61)
     }
 
@@ -75,10 +75,10 @@ private extension MatchTag {
     
     var kickoffTimeView: some View {
         Text(viewModel.kickoffTimeText)
-            .font(.selecta(.regular, size: 14))
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .frame(height: 32, alignment: .center)
+            .font(.selecta(.regular, size: 12))
+            .padding(.horizontal, 8)
+            .padding(.top, 2)
+            .frame(width: 48, height: 24, alignment: .center)
             .foregroundColor(.white)
             .background {
                 RoundedRectangle(cornerRadius: 4)
