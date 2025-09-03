@@ -15,9 +15,10 @@ struct LeagueHeader: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 24, height: 24)
-            Text(title)
+            Text(title.capitalized)
                 .font(.selecta(.medium, size: 16))
                 .foregroundStyle(Color(hex: "1C1B19"))
+                .textCase(nil)
 
             Spacer()
 
@@ -30,5 +31,5 @@ struct LeagueHeader: View {
 }
 
 #Preview {
-    LeagueHeader(title: "Premier League")
+    LeagueHeader(title: "PREMIER LEAGUE")
 }
