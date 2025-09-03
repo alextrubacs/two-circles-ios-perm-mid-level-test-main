@@ -10,6 +10,7 @@ struct ContentView: View {
                 loadingView
             } else {
                 ScoreCardList(groupedMatches: viewModel.groupedMatches)
+                    .transition(.blurReplace)
             }
         }
         .task {
@@ -33,6 +34,7 @@ private extension ContentView {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.systemBackground))
+        .transition(.blurReplace)
     }
 }
 
