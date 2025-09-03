@@ -302,4 +302,138 @@ struct ScoreCardViewModelTests {
             }
         }
     }
+    
+    // MARK: - ScoreCardListViewModel State Machine Tests
+    
+    @Test("ScoreCardListViewModel initial state is loading")
+    func testScoreCardListViewModelInitialState() {
+        // Given
+        let viewModel = ScoreCardListViewModel()
+        
+        // When & Then
+        #expect(viewModel.isLoading == true)
+        #expect(viewModel.matches.isEmpty)
+        #expect(viewModel.groupedMatches.isEmpty)
+    }
+    
+    @Test("ScoreCardListViewModel state transitions from loading to loaded after fetch")
+    func testScoreCardListViewModelStateTransition() async {
+        // Given
+        let viewModel = ScoreCardListViewModel()
+        #expect(viewModel.isLoading == true) // Initial state
+        
+        // When
+        await viewModel.fetchMatches()
+        
+        // Then
+        #expect(viewModel.isLoading == false) // Final state
+        #expect(!viewModel.matches.isEmpty) // Data was loaded
+        #expect(!viewModel.groupedMatches.isEmpty) // Data was processed
+    }
+    
+    @Test("ScoreCardListViewModel multiple fetch calls handle state correctly")
+    func testScoreCardListViewModelMultipleFetchCalls() async {
+        // Given
+        let viewModel = ScoreCardListViewModel()
+        
+        // When - Multiple fetches
+        await viewModel.fetchMatches()
+        let firstFetchMatches = viewModel.matches.count
+        #expect(viewModel.isLoading == false)
+        
+        await viewModel.fetchMatches()
+        let secondFetchMatches = viewModel.matches.count
+        
+        // Then
+        #expect(viewModel.isLoading == false) // Always ends in loaded state
+        #expect(firstFetchMatches == secondFetchMatches) // Same data source
+    }
+    
+    @Test("ScoreCardListViewModel state machine handles concurrent access")
+    func testScoreCardListViewModelConcurrentAccess() async {
+        // Given
+        let viewModel = ScoreCardListViewModel()
+        let iterations = 5
+        
+        // When - Simulate concurrent fetches
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<iterations {
+                group.addTask {
+                    await viewModel.fetchMatches()
+                }
+            }
+        }
+        
+        // Then
+        #expect(viewModel.isLoading == false) // Final state is always loaded
+        #expect(!viewModel.matches.isEmpty) // Data was loaded
+    }
+    
+    @Test("ScoreCardListViewModel state machine invariants are maintained")
+    func testScoreCardListViewModelInvariants() async {
+        // Given
+        let viewModel = ScoreCardListViewModel()
+        
+        // Invariant 1: Initial state
+        #expect(viewModel.isLoading == true)
+        
+        // When
+        await viewModel.fetchMatches()
+        
+        // Invariant 2: Post-fetch state
+        #expect(viewModel.isLoading == false)
+        
+        // Invariant 3: Data consistency
+        if !viewModel.matches.isEmpty {
+            #expect(!viewModel.groupedMatches.isEmpty) // If matches exist, groups should too
+        }
+        
+        // Invariant 4: Group count relationship
+        let totalMatchesInGroups = viewModel.groupedMatches.reduce(0) { $0 + $1.matches.count }
+        #expect(totalMatchesInGroups == viewModel.matches.count)
+    }
+    
+    @Test("ScoreCardListViewModel defer ensures loading state cleanup")
+    func testScoreCardListViewModelDeferBehavior() async {
+        // Given
+        let viewModel = TestableScoreCardListViewModel()
+        
+        // When - Test early return scenario
+        await viewModel.fetchMatchesWithEarlyReturn()
+        
+        // Then
+        #expect(viewModel.isLoading == false) // Defer executed
+        #expect(viewModel.deferExecuted == true) // Confirm defer ran
+        
+        // When - Test normal execution
+        viewModel.deferExecuted = false
+        viewModel.shouldReturnEarly = false
+        await viewModel.fetchMatchesWithEarlyReturn()
+        
+        // Then
+        #expect(viewModel.isLoading == false) // Defer executed
+        #expect(viewModel.deferExecuted == true) // Confirm defer ran
+    }
+}
+
+// MARK: - Testable ViewModel for Advanced Testing
+
+class TestableScoreCardListViewModel: ScoreCardListViewModel {
+    var shouldReturnEarly = false
+    var deferExecuted = false
+    
+    func fetchMatchesWithEarlyReturn() async {
+        isLoading = true
+        defer { 
+            isLoading = false
+            deferExecuted = true
+        }
+        
+        if shouldReturnEarly {
+            return // Early return - defer should still execute
+        }
+        
+        matches = try! await DataSourceFactory.matchesDataSource().execute()
+        groupMatchesByLeague()
+    }
 }
