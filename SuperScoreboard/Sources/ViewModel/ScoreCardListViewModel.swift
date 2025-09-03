@@ -2,7 +2,7 @@ import SwiftUI
 import Domain
 
 // MARK: - Error State Enum
-enum ErrorState {
+enum ErrorState: Equatable {
     case none
     case error(AppError)
     case retrying(AppError)
@@ -39,7 +39,7 @@ class ScoreCardListViewModel {
     
     // MARK: - Private Methods
     
-    private func fetchFreshData() async {
+    internal func fetchFreshData() async {
         isLoading = true
         errorState = .none
         

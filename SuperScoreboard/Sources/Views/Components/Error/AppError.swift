@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - App Error Types
-public enum AppError: LocalizedError, Sendable {
+public enum AppError: LocalizedError, Sendable, Equatable {
     case networkFailure(String)
     case dataParsingError(String)
     case missingRequiredData(String)
