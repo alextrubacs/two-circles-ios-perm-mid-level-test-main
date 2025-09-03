@@ -17,8 +17,9 @@ struct ClubBadge: View {
                 .renderingMode(.original)
 
             Text(clubName)
-                .font(.selecta(.medium, style: .subheadline))
+                .font(.selecta(.medium, size: 14))
         }
+
     }
 }
 

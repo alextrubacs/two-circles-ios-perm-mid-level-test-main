@@ -9,14 +9,15 @@ import SwiftUI
 
 struct ScoreCard: View {
     var body: some View {
-        HStack {
-            ClubBadge(
-                imageName: "Paris_Saint-Germain",
-                clubName: "PSG"
-            )
-
-            Text("2")
-                .font(.drukWide(.bold, size: 34))
+        VStack(spacing: 10) {
+            HStack {
+                ClubBadge(
+                    imageName: "Paris_Saint-Germain",
+                    clubName: "PSG"
+                )
+                Text("2")
+                    .font(.drukWide(.bold, size: 34))
+            }
         }
     }
 }
