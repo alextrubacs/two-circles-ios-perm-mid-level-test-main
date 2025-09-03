@@ -4,6 +4,7 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
+		<string>DrukWide-Bold-Trial.otf</string>
 		<string>SelectaTrialUnlicensed-Thin.ttf
 </string>
 		<string>SelectaTrialUnlicensed-ThinItalic.ttf</string>
