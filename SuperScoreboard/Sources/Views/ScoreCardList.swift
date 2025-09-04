@@ -9,6 +9,7 @@ import SwiftUI
 import Domain
 
 struct ScoreCardList: View {
+    @State private var showFollowView: Bool = false
     let groupedMatches: [MatchSection]
     
     var body: some View {
@@ -27,7 +28,7 @@ struct ScoreCardList: View {
             }
 
             FollowBanner {
-                // Button action placeholder
+                showFollowView = true
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
@@ -35,6 +36,9 @@ struct ScoreCardList: View {
             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
         .listStyle(.insetGrouped)
+        .sheet(isPresented: $showFollowView) {
+            FollowView()
+        }
     }
 }
 
