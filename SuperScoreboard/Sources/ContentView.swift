@@ -5,6 +5,24 @@ struct ContentView: View {
     @State var viewModel = ScoreCardListViewModel()
 
     var body: some View {
+        TabView {
+            matchesView
+            .tabItem {
+                Image(systemName: "sportscourt")
+                Text("Matches")
+            }
+
+            FavoritesView()
+                .tabItem {
+                    Image(systemName: "heart.fill")
+                    Text("Favorites")
+                }
+        }
+    }
+}
+
+private extension ContentView {
+    var matchesView: some View {
         Group {
             if viewModel.isLoading {
                 loadingView
@@ -23,7 +41,6 @@ struct ContentView: View {
 }
 
 // MARK: - Loading View
-
 private extension ContentView {
     var loadingView: some View {
         VStack(spacing: 16) {
