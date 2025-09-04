@@ -49,22 +49,22 @@ struct SectionView<Item: SectionItem, ItemView: View>: View {
     private var sectionHeader: some View {
         HStack {
             Image(systemName: systemImage)
-                .foregroundColor(.blue)
-                .font(.title2)
-            
+                .foregroundColor(Color(hex: "255AF6"))
+
             Text(title)
-                .font(.selecta(.medium, size: 18))
-                .foregroundColor(.primary)
-            
+                .font(.selecta(.medium, size: 16))
+                .foregroundStyle(Color(hex: "1C1B19"))
+                .textCase(nil)
+
             Spacer()
             
             Text("\(items.count)")
                 .font(.selecta(.medium, size: 16))
-                .foregroundColor(.blue)
+                .foregroundColor(Color(hex: "255AF6"))
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(Color.blue.opacity(0.1))
-                .cornerRadius(12)
+                .background(Color(hex: "255AF6").opacity(0.1))
+                .cornerRadius(6)
         }
     }
     
@@ -88,8 +88,10 @@ struct SectionView<Item: SectionItem, ItemView: View>: View {
     
     private var emptyStateView: some View {
         VStack(spacing: 8) {
-            Image(systemName: "heart")
-                .font(.system(size: 30))
+            Image("follow_heart")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 30, height: 30)
                 .foregroundColor(.gray)
             
             Text("No \(title.lowercased()) yet")
@@ -98,8 +100,6 @@ struct SectionView<Item: SectionItem, ItemView: View>: View {
         }
         .frame(maxWidth: .infinity)
         .padding(20)
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
     }
 }
 
@@ -112,7 +112,9 @@ struct SectionView<Item: SectionItem, ItemView: View>: View {
             systemImage: "person.3.fill",
             columns: 3
         ) { item in
-            Text(item.displayName)
+            TeamItemView(item: item, isFavorited: true)
+            TeamItemView(item: item, isFavorited: true)
+            TeamItemView(item: item, isFavorited: true)
         }
     }
     .padding()
