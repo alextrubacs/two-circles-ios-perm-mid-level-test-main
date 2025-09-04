@@ -63,7 +63,9 @@ private extension ScoreCardList {
     }
 
     var followBanner: some View {
-        FollowBanner {
+        FollowBanner(
+            isFavoritesEmpty: viewModel.groupedMatches.contains(where: { $0.leagueName == "Favorites"})
+        ) {
             showFollowView = true
         }
         .listRowSeparator(.hidden)
