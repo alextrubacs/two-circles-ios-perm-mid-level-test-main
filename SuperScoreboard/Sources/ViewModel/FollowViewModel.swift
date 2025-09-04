@@ -2,7 +2,6 @@ import Foundation
 import SwiftUI
 import Domain
 
-@MainActor
 @Observable
 class FollowViewModel {
     
