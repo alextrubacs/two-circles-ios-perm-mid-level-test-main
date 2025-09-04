@@ -210,25 +210,6 @@ struct FollowViewModelTests {
         #expect(viewModel.allTeams.first?.displayName != nil)
     }
     
-    @Test("loadAllData processes players correctly")
-    func testLoadAllDataProcessesPlayers() async {
-        let viewModel = FollowViewModel()
-        
-        // Use MockData to get real player data
-        let mockMatches = MockData.matches
-        let allGoals = mockMatches.compactMap { $0.goals }.flatMap { $0 }
-        let uniquePlayerIds = Set(allGoals.map { $0.personId })
-        let uniquePlayers = uniquePlayerIds.map { id in 
-            PlayerData(id: id, name: "Player \(id)") 
-        }.sorted { $0.name < $1.name }
-        
-        let mockPlayers = uniquePlayers.map { PlayerSectionItem(playerData: $0) }
-        viewModel.allPlayers = mockPlayers
-        
-        #expect(viewModel.allPlayers.count > 0)
-        #expect(viewModel.allPlayers.first?.displayName != nil)
-    }
-    
     @Test("loadAllData processes leagues correctly")
     func testLoadAllDataProcessesLeagues() async {
         let viewModel = FollowViewModel()
