@@ -10,6 +10,8 @@ import Domain
 
 struct ScoreCard: View {
     @State private var viewModel: ScoreCardViewModel
+    @State private var favoritesService: FavoritesServiceProtocol?
+    @State private var isMatchFavorited = false
     
     init(match: Match) {
         self._viewModel = State(initialValue: ScoreCardViewModel(match: match))
@@ -29,6 +31,18 @@ struct ScoreCard: View {
                 imageName: viewModel.teamTwoName,
                 clubName: viewModel.shouldShowClubNames ? viewModel.clubTwoName : ""
             )
+            
+            // Favorites button
+            Button(action: {
+                Task {
+                    await toggleMatchFavorite()
+                }
+            }) {
+                Image(systemName: isMatchFavorited ? "heart.fill" : "heart")
+                    .foregroundColor(isMatchFavorited ? .red : .gray)
+                    .font(.title2)
+            }
+            .padding(.leading, 8)
         }
         .padding()
         .background {
@@ -36,6 +50,41 @@ struct ScoreCard: View {
                 .foregroundStyle(.white)
         }
         .frame(height: 96, alignment: .center)
+        .task {
+            await loadFavoritesService()
+            await checkIfMatchIsFavorited()
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    @MainActor
+    private func loadFavoritesService() async {
+        do {
+            favoritesService = try await FavoritesServiceFactory.shared
+        } catch {
+            print("Failed to load favorites service: \(error)")
+        }
+    }
+    
+    private func toggleMatchFavorite() async {
+        guard let service = favoritesService else { return }
+        
+        do {
+            if isMatchFavorited {
+                try await service.removeFavorite(id: viewModel.match.id, type: .match)
+            } else {
+                try await service.addFavorite(id: viewModel.match.id, type: .match)
+            }
+            isMatchFavorited.toggle()
+        } catch {
+            print("Failed to toggle match favorite: \(error)")
+        }
+    }
+    
+    private func checkIfMatchIsFavorited() async {
+        guard let service = favoritesService else { return }
+        isMatchFavorited = await service.isFavorite(id: viewModel.match.id, type: .match)
     }
 }
 
