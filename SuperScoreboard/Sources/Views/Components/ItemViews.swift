@@ -31,7 +31,8 @@ extension GenericItemView {
     private func teamItemView(for teamItem: TeamSectionItem) -> some View {
         ClubBadge(
             imageName: teamItem.imageName,
-            clubName: teamItem.clubAbbr
+            clubName: teamItem.displayName,
+            isFavourite: isFavorited
         )
     }
 
