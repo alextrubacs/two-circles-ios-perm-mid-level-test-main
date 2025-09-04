@@ -86,11 +86,11 @@ private extension FollowView {
                 ) { item in
                     GenericItemView(
                         item: item,
-                        isFavorited: viewModel.isFavorite(id: item.id, type: .team) // Using team type for leagues
+                        isFavorited: viewModel.isFavorite(id: item.id, type: .match) // Using match type for leagues
                     )
                 } onItemTap: { item in
                     Task {
-                        await viewModel.toggleFavorite(id: item.id, type: .team) // Using team type for leagues
+                        await viewModel.toggleFavorite(id: item.id, type: .match) // Using match type for leagues
                     }
                 }
             }
