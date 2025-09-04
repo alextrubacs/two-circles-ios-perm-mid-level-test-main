@@ -4,6 +4,7 @@ import Domain
 struct FollowView: View {
     @State private var viewModel = FollowViewModel()
     @State private var showErrorAlert = false
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationView {
@@ -14,8 +15,17 @@ struct FollowView: View {
                     followScrollView
                 }
             }
-            .navigationTitle("Follow your favourites")
+            .navigationTitle("Pick your favourites")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .font(.selecta(.medium, size: 16))
+                    .foregroundColor(Color(hex: "255AF6"))
+                }
+            }
             .alert("Error", isPresented: $showErrorAlert) {
                 Button("OK") {
                     viewModel.clearError()
@@ -58,6 +68,7 @@ private extension FollowView {
                     Task {
                         await viewModel.toggleFavorite(id: item.id, type: .team)
                     }
+                    print("$ \(item)")
                 }
 
                 // Players Section
