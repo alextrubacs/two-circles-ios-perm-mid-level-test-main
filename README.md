@@ -46,7 +46,7 @@ For all of your up to the minute football scores from around the globe.
 
 **Responsive Design**: Used automatic padding and flexible layouts to accommodate different screen sizes. Implemented consistent spacing and typography matching the Figma designs.
 
-**Visual Details**: Created custom TrapezoidShape with mask modifier to ensure the "face off" image stays within bounds. Implemented consistent score display with maximum frame constraints to maintain layout stability.
+**Visual Details**: Created custom TrapezoidShape with mask modifier to ensure the "face off" image stays within bounds, unlike in the Figma design file. Implemented consistent score display with maximum frame constraints to maintain layout stability.
 
 ### Error Handling & User Experience
 **Error Handling Strategy: Three-tier approach with user-friendly messaging** - Implemented comprehensive error handling with:
