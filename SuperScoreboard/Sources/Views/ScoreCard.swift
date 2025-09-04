@@ -11,7 +11,8 @@ import Domain
 struct ScoreCard: View {
     @State private var viewModel: ScoreCardViewModel
     @State private var favoritesService: FavoritesServiceProtocol?
-    @State private var isMatchFavorited = false
+    @State private var isTeamOneFavorited = false
+    @State private var isTeamTwoFavorited = false
     
     init(match: Match) {
         self._viewModel = State(initialValue: ScoreCardViewModel(match: match))
@@ -21,7 +22,8 @@ struct ScoreCard: View {
         HStack(alignment: .center) {
             ClubBadge(
                 imageName: viewModel.teamOneName,
-                clubName: viewModel.shouldShowClubNames ? viewModel.clubOneName : ""
+                clubName: viewModel.shouldShowClubNames ? viewModel.clubOneName : "",
+                isFavourite: isTeamOneFavorited
             )
 
             MatchTag()
@@ -29,7 +31,8 @@ struct ScoreCard: View {
 
             ClubBadge(
                 imageName: viewModel.teamTwoName,
-                clubName: viewModel.shouldShowClubNames ? viewModel.clubTwoName : ""
+                clubName: viewModel.shouldShowClubNames ? viewModel.clubTwoName : "",
+                isFavourite: isTeamTwoFavorited
             )
         }
         .padding()
@@ -40,6 +43,7 @@ struct ScoreCard: View {
         .frame(height: 96, alignment: .center)
         .task {
             await loadFavoritesService()
+            await checkTeamFavoriteStatus()
         }
     }
     
@@ -52,6 +56,13 @@ struct ScoreCard: View {
         } catch {
             print("Failed to load favorites service: \(error)")
         }
+    }
+    
+    @MainActor
+    private func checkTeamFavoriteStatus() async {
+        guard let service = favoritesService else { return }
+        isTeamOneFavorited = await service.isFavorite(id: viewModel.teamOneId, type: .team)
+        isTeamTwoFavorited = await service.isFavorite(id: viewModel.teamTwoId, type: .team)
     }
 }
 
