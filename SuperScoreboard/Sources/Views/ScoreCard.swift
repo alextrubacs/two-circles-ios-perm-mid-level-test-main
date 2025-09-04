@@ -31,18 +31,6 @@ struct ScoreCard: View {
                 imageName: viewModel.teamTwoName,
                 clubName: viewModel.shouldShowClubNames ? viewModel.clubTwoName : ""
             )
-            
-            // Favorites button
-            Button(action: {
-                Task {
-                    await toggleMatchFavorite()
-                }
-            }) {
-                Image(systemName: isMatchFavorited ? "heart.fill" : "heart")
-                    .foregroundColor(isMatchFavorited ? .red : .gray)
-                    .font(.title2)
-            }
-            .padding(.leading, 8)
         }
         .padding()
         .background {
@@ -52,7 +40,6 @@ struct ScoreCard: View {
         .frame(height: 96, alignment: .center)
         .task {
             await loadFavoritesService()
-            await checkIfMatchIsFavorited()
         }
     }
     
@@ -65,26 +52,6 @@ struct ScoreCard: View {
         } catch {
             print("Failed to load favorites service: \(error)")
         }
-    }
-    
-    private func toggleMatchFavorite() async {
-        guard let service = favoritesService else { return }
-        
-        do {
-            if isMatchFavorited {
-                try await service.removeFavorite(id: viewModel.match.id, type: .match)
-            } else {
-                try await service.addFavorite(id: viewModel.match.id, type: .match)
-            }
-            isMatchFavorited.toggle()
-        } catch {
-            print("Failed to toggle match favorite: \(error)")
-        }
-    }
-    
-    private func checkIfMatchIsFavorited() async {
-        guard let service = favoritesService else { return }
-        isMatchFavorited = await service.isFavorite(id: viewModel.match.id, type: .match)
     }
 }
 
