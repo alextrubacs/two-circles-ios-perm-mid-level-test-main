@@ -18,24 +18,13 @@ struct ScoreCardList: View {
             ForEach(viewModel.groupedMatches) { section in
                 Section(header: LeagueHeader(title: section.leagueName)) {
                     ForEach(section.matches, id: \.id) { match in
-                        ScoreCard(match: match)
-                            .id(refreshTrigger) // Force refresh when trigger changes
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(Color.clear)
-                            .listRowSpacing(0)
-                            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 4, trailing: 0))
+                        scoreCard(for: match)
                     }
                 }
                 .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 4, trailing: 0))
             }
 
-            FollowBanner {
-                showFollowView = true
-            }
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
-            .listRowSpacing(0)
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            followBanner
         }
         .listStyle(.insetGrouped)
         .sheet(isPresented: $showFollowView) {
@@ -55,5 +44,27 @@ struct ScoreCardList: View {
 
 #Preview {
     ScoreCardList()
-        .environment(ScoreCardViewModel(match: MockData.Previews.finishedScenario))
+        .environment(ScoreCardListViewModel())
+}
+
+// MARK: Subviews
+private extension ScoreCardList {
+    func scoreCard(for match: Match) -> some View {
+        ScoreCard(match: match)
+            .id(refreshTrigger) // Force refresh when trigger changes
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
+            .listRowSpacing(0)
+            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 4, trailing: 0))
+    }
+
+    var followBanner: some View {
+        FollowBanner {
+            showFollowView = true
+        }
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
+        .listRowSpacing(0)
+        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+    }
 }
