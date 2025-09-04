@@ -43,8 +43,12 @@ struct ScoreCardList: View {
 }
 
 #Preview {
+    @Previewable @State var viewModel: ScoreCardListViewModel = .init()
     ScoreCardList()
-        .environment(ScoreCardListViewModel())
+        .environment(viewModel)
+        .task {
+            await viewModel.fetchMatches()
+        }
 }
 
 // MARK: Subviews
