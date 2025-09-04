@@ -113,6 +113,10 @@ class FavoritesViewModel {
         isLoading = false
     }
     
+    func clearError() {
+        errorMessage = nil
+    }
+    
     // MARK: - Private Methods
     
     private func updateLocalState(id: Int, type: FavoriteType, isAdding: Bool) async {
