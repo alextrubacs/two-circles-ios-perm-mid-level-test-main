@@ -68,7 +68,6 @@ private extension FollowView {
                     Task {
                         await viewModel.toggleFavorite(id: item.id, type: .team)
                     }
-                    print("$ \(item)")
                 }
 
                 // Players Section
