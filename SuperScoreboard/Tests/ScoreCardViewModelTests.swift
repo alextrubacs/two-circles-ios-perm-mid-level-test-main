@@ -373,24 +373,32 @@ struct ScoreCardViewModelTests {
     func testScoreCardListViewModelInvariants() async {
         // Given
         let viewModel = ScoreCardListViewModel()
-        
+
         // Invariant 1: Initial state
         #expect(viewModel.isLoading == true)
-        
+
         // When
         await viewModel.fetchMatches()
-        
+
         // Invariant 2: Post-fetch state
         #expect(viewModel.isLoading == false)
-        
+
         // Invariant 3: Data consistency
         if !viewModel.matches.isEmpty {
             #expect(!viewModel.groupedMatches.isEmpty) // If matches exist, groups should too
         }
-        
-        // Invariant 4: Group count relationship
+
+        // Invariant 4: Group count relationship (accounting for Favorites section)
         let totalMatchesInGroups = viewModel.groupedMatches.reduce(0) { $0 + $1.matches.count }
-        #expect(totalMatchesInGroups == viewModel.matches.count)
+        let uniqueMatchIds = Set(viewModel.matches.map { $0.id })
+
+        // With Favorites section, matches can appear in both Favorites and their original league
+        // So total count in groups can be >= unique matches count
+        #expect(totalMatchesInGroups >= viewModel.matches.count)
+
+        // All original matches should be represented in the groups (accounting for Favorites duplication)
+        let allMatchIdsInGroups = Set(viewModel.groupedMatches.flatMap { $0.matches.map { $0.id } })
+        #expect(allMatchIdsInGroups.isSuperset(of: uniqueMatchIds))
     }
     
     @Test("ScoreCardListViewModel defer ensures loading state cleanup")

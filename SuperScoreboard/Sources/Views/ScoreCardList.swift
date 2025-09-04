@@ -9,50 +9,70 @@ import SwiftUI
 import Domain
 
 struct ScoreCardList: View {
-    let groupedMatches: [MatchSection]
+    @Environment(ScoreCardListViewModel.self) private var viewModel
+    @State private var showFollowView: Bool = false
+    @State private var refreshTrigger: UUID = UUID()
     
     var body: some View {
         List {
-            ForEach(groupedMatches) { section in
+            ForEach(viewModel.groupedMatches) { section in
                 Section(header: LeagueHeader(title: section.leagueName)) {
                     ForEach(section.matches, id: \.id) { match in
-                        ScoreCard(match: match)
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(Color.clear)
-                            .listRowSpacing(0)
-                            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 4, trailing: 0))
+                        scoreCard(for: match)
                     }
                 }
                 .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 4, trailing: 0))
             }
 
-            FollowBanner {
-                // Button action placeholder
-            }
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
-            .listRowSpacing(0)
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            followBanner
         }
         .listStyle(.insetGrouped)
+        .sheet(isPresented: $showFollowView) {
+            FollowView()
+        }
+        .onChange(of: showFollowView) { _, isPresented in
+            if !isPresented {
+                // Refresh favorites and ScoreCard components when FollowView is dismissed
+                Task {
+                    await viewModel.refreshFavorites()
+                }
+                refreshTrigger = UUID()
+            }
+        }
     }
 }
 
 #Preview {
-    ScoreCardList(groupedMatches: [
-        MatchSection(
-            leagueName: "Premier League",
-            matches: [
-                MockData.Previews.liveScenario,
-                MockData.Previews.upcomingScenario
-            ]
-        ),
-        MatchSection(
-            leagueName: "Champions League",
-            matches: [
-                MockData.Previews.finishedScenario,
-                MockData.Previews.highScoreScenario
-            ]
-        )
-    ])
+    @Previewable @State var viewModel: ScoreCardListViewModel = .init()
+    ScoreCardList()
+        .environment(viewModel)
+        .task {
+            await viewModel.fetchMatches()
+        }
+}
+
+// MARK: Subviews
+private extension ScoreCardList {
+    func scoreCard(for match: Match) -> some View {
+        ScoreCard(match: match)
+            .id(refreshTrigger) // Force refresh when trigger changes
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
+            .listRowSpacing(0)
+            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 4, trailing: 0))
+    }
+
+    var isFavouritesEmpty: Bool {
+        viewModel.favoriteTeamIds.isEmpty && viewModel.favoritePlayerIds.isEmpty
+    }
+
+    var followBanner: some View {
+        FollowBanner(isFavoritesEmpty: isFavouritesEmpty) {
+            showFollowView = true
+        }
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
+        .listRowSpacing(0)
+        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+    }
 }

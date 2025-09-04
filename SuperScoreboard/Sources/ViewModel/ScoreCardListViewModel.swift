@@ -17,6 +17,11 @@ class ScoreCardListViewModel {
     var isLoading: Bool = true
     var errorState: ErrorState = .none
     
+    // MARK: - Favorites Properties
+    private var favoritesService: FavoritesServiceProtocol?
+    var favoriteTeamIds: [Int] = []
+    var favoritePlayerIds: [Int] = []
+    
     // MARK: - Error Recovery Properties
     var retryCount = 0
     var maxRetries = 3
@@ -25,7 +30,13 @@ class ScoreCardListViewModel {
     // MARK: - Public Methods
     
     func fetchMatches() async {
+        await initializeFavoritesService()
         await fetchFreshData()
+    }
+    
+    func refreshFavorites() async {
+        await loadFavorites()
+        groupMatchesByLeague()
     }
     
     func retryFetch() async {
@@ -129,9 +140,57 @@ class ScoreCardListViewModel {
             match.competition?.title
         }
 
-        groupedMatches = grouped.map { (leagueName, matches) in
+        var sections = grouped.map { (leagueName, matches) in
             MatchSection(leagueName: leagueName ?? "Unknown League", matches: matches)
         }.sorted { $0.leagueName < $1.leagueName }
+        
+        // Add Favourites section if there are matches with favorites
+        let favoriteMatches = matches.filter { match in
+            containsFavoriteTeamOrPlayer(match)
+        }
+        
+        if !favoriteMatches.isEmpty {
+            let favoritesSection = MatchSection(leagueName: "Favourites", matches: favoriteMatches)
+            sections.insert(favoritesSection, at: 0) // Insert at the top
+        }
+        
+        groupedMatches = sections
+    }
+    
+    // MARK: - Favorites Methods
+    
+    private func initializeFavoritesService() async {
+        do {
+            favoritesService = try await FavoritesServiceFactory.shared
+            await loadFavorites()
+        } catch {
+            print("Failed to initialize favorites service: \(error)")
+        }
+    }
+    
+    private func loadFavorites() async {
+        guard let service = favoritesService else { return }
+        
+        do {
+            favoriteTeamIds = try await service.getFavorites(of: .team)
+            favoritePlayerIds = try await service.getFavorites(of: .player)
+        } catch {
+            print("Failed to load favorites: \(error)")
+        }
+    }
+    
+    private func containsFavoriteTeamOrPlayer(_ match: Match) -> Bool {
+        // Check if any team in the match is favorited
+        let hasFavoriteTeam = match.teams.contains { team in
+            favoriteTeamIds.contains(team.team.id)
+        }
+        
+        // Check if any player in the match goals is favorited
+        let hasFavoritePlayer = match.goals?.contains { goal in
+            favoritePlayerIds.contains(goal.personId)
+        } ?? false
+        
+        return hasFavoriteTeam || hasFavoritePlayer
     }
 }
 

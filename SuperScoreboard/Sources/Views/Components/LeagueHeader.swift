@@ -31,5 +31,5 @@ struct LeagueHeader: View {
 }
 
 #Preview {
-    LeagueHeader(title: "PREMIER LEAGUE")
+    LeagueHeader(title: "Favourites")
 }

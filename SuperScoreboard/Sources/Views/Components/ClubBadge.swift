@@ -10,6 +10,7 @@ import SwiftUI
 struct ClubBadge: View {
     let imageName: String
     let clubName: String
+    let isFavourite: Bool
     
     var body: some View {
         VStack {
@@ -17,7 +18,12 @@ struct ClubBadge: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 40, height: 40)
-
+                .overlay(alignment: .bottomTrailing) {
+                    if isFavourite {
+                        FollowBadge()
+                    }
+                }
+            
             if !clubName.isEmpty {
                 Text(clubName)
                     .font(.selecta(.medium, size: 14))
@@ -31,6 +37,7 @@ struct ClubBadge: View {
 #Preview {
     ClubBadge(
         imageName: "Paris_Saint-Germain",
-        clubName: "PSG"
+        clubName: "PSG",
+        isFavourite: true
     )
 }
