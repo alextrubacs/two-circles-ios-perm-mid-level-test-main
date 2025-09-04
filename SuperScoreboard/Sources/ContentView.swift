@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct ContentView: View {
-
     @State var viewModel = ScoreCardListViewModel()
 
     var body: some View {
         NavigationStack {
             matchesView
                 .navigationBarTitleDisplayMode(.inline)
+                .environment(viewModel)
         }
     }
 }
@@ -18,7 +18,7 @@ private extension ContentView {
             if viewModel.isLoading {
                 loadingView
             } else {
-                ScoreCardList(groupedMatches: viewModel.groupedMatches)
+                ScoreCardList()
                     .transition(.blurReplace)
             }
         }
