@@ -1,3 +1,10 @@
+//
+//  FavoritesView.swift
+//  SuperScoreboard
+//
+//  Created by Aleksandrs Trubacs on 04/09/2025.
+//
+
 import SwiftUI
 
 struct FavoritesView: View {
