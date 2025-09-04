@@ -14,6 +14,16 @@ class ScoreCardViewModel {
     }
     
     // MARK: - Team Information
+    var teamOneId: Int {
+        guard match.teams.count > 0 else { return 0 }
+        return match.teams[0].team.id
+    }
+    
+    var teamTwoId: Int {
+        guard match.teams.count > 1 else { return 0 }
+        return match.teams[1].team.id
+    }
+    
     var teamOneName: String {
         guard match.teams.count > 0 else { return "Unknown" }
         return match.teams[0].team.name
