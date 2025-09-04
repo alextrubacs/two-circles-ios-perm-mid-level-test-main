@@ -16,6 +16,9 @@ struct ContentView: View {
         .task {
             await viewModel.fetchMatches()
         }
+        .overlay {
+            errorOverlay
+        }
     }
 }
 
@@ -35,6 +38,31 @@ private extension ContentView {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.systemBackground))
         .transition(.blurReplace)
+    }
+    
+    @ViewBuilder
+    var errorOverlay: some View {
+        switch viewModel.errorState {
+        case .none:
+            EmptyView()
+        case .error(let error):
+            ErrorView(
+                error: error,
+                isRetrying: false,
+                onRetry: {
+                    Task {
+                        await viewModel.retryFetch()
+                    }
+                },
+                onDismiss: {
+                    viewModel.dismissError()
+                }
+            )
+            .transition(.opacity.combined(with: .scale))
+        case .retrying(let error):
+            RetryingView(error: error)
+                .transition(.opacity.combined(with: .scale))
+        }
     }
 }
 
