@@ -9,13 +9,13 @@ import SwiftUI
 import Domain
 
 struct ScoreCardList: View {
+    @Environment(ScoreCardListViewModel.self) private var viewModel
     @State private var showFollowView: Bool = false
     @State private var refreshTrigger: UUID = UUID()
-    let groupedMatches: [MatchSection]
     
     var body: some View {
         List {
-            ForEach(groupedMatches) { section in
+            ForEach(viewModel.groupedMatches) { section in
                 Section(header: LeagueHeader(title: section.leagueName)) {
                     ForEach(section.matches, id: \.id) { match in
                         ScoreCard(match: match)
@@ -43,7 +43,10 @@ struct ScoreCardList: View {
         }
         .onChange(of: showFollowView) { _, isPresented in
             if !isPresented {
-                // Refresh ScoreCard components when FollowView is dismissed
+                // Refresh favorites and ScoreCard components when FollowView is dismissed
+                Task {
+                    await viewModel.refreshFavorites()
+                }
                 refreshTrigger = UUID()
             }
         }
@@ -51,20 +54,6 @@ struct ScoreCardList: View {
 }
 
 #Preview {
-    ScoreCardList(groupedMatches: [
-        MatchSection(
-            leagueName: "Premier League",
-            matches: [
-                MockData.Previews.liveScenario,
-                MockData.Previews.upcomingScenario
-            ]
-        ),
-        MatchSection(
-            leagueName: "Champions League",
-            matches: [
-                MockData.Previews.finishedScenario,
-                MockData.Previews.highScoreScenario
-            ]
-        )
-    ])
+    ScoreCardList()
+        .environment(ScoreCardViewModel(match: MockData.Previews.finishedScenario))
 }
