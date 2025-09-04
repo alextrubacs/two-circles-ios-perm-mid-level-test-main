@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FollowBanner: View {
+    let isFavoritesEmpty: Bool
     let buttonPressed: () -> Void
     
     var body: some View {
@@ -20,8 +21,14 @@ struct FollowBanner: View {
 }
 
 #Preview {
-    FollowBanner {
-        print("Follow button tapped!")
+    VStack(spacing: 20) {
+        FollowBanner(isFavoritesEmpty: true) {
+            print("Start following tapped!")
+        }
+        
+        FollowBanner(isFavoritesEmpty: false) {
+            print("Pick favourites tapped!")
+        }
     }
     .padding()
 }
@@ -62,7 +69,7 @@ private extension FollowBanner {
              Button {
                  buttonPressed()
              } label: {
-                Text("Start following")
+                Text(isFavoritesEmpty ? "Start following" : "Pick favourites")
                     .font(.selecta(.medium, size: 13))
                     .foregroundStyle(Color(hex: "1C1B19"))
             }
