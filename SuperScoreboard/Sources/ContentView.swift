@@ -1,22 +1,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    
+
     @State var viewModel = ScoreCardListViewModel()
 
     var body: some View {
-        TabView {
+        NavigationStack {
             matchesView
-            .tabItem {
-                Image(systemName: "sportscourt")
-                Text("Matches")
-            }
-
-            FavoritesView()
-                .tabItem {
-                    Image(systemName: "heart.fill")
-                    Text("Favorites")
-                }
+                .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
