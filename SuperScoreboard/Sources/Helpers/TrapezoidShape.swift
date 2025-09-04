@@ -84,7 +84,7 @@ struct TrapezoidShape: Shape {
 }
 
 #Preview {
-    FollowBanner {
+    FollowBanner(isFavoritesEmpty: true) {
         print("Follow button tapped!")
     }
     .padding()
