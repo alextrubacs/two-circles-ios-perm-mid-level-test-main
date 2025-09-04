@@ -14,8 +14,8 @@ struct FollowView: View {
                     followScrollView
                 }
             }
-            .navigationTitle("Follow")
-            .font(.selecta(.medium, size: 24))
+            .navigationTitle("Follow your favourites")
+            .navigationBarTitleDisplayMode(.inline)
             .alert("Error", isPresented: $showErrorAlert) {
                 Button("OK") {
                     viewModel.clearError()
@@ -59,7 +59,7 @@ private extension FollowView {
                         await viewModel.toggleFavorite(id: item.id, type: .team)
                     }
                 }
-                
+
                 // Players Section
                 SectionView(
                     title: "All Players",
