@@ -10,6 +10,7 @@ import Domain
 
 struct ScoreCardList: View {
     @State private var showFollowView: Bool = false
+    @State private var refreshTrigger: UUID = UUID()
     let groupedMatches: [MatchSection]
     
     var body: some View {
@@ -18,6 +19,7 @@ struct ScoreCardList: View {
                 Section(header: LeagueHeader(title: section.leagueName)) {
                     ForEach(section.matches, id: \.id) { match in
                         ScoreCard(match: match)
+                            .id(refreshTrigger) // Force refresh when trigger changes
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
                             .listRowSpacing(0)
@@ -38,6 +40,12 @@ struct ScoreCardList: View {
         .listStyle(.insetGrouped)
         .sheet(isPresented: $showFollowView) {
             FollowView()
+        }
+        .onChange(of: showFollowView) { _, isPresented in
+            if !isPresented {
+                // Refresh ScoreCard components when FollowView is dismissed
+                refreshTrigger = UUID()
+            }
         }
     }
 }
