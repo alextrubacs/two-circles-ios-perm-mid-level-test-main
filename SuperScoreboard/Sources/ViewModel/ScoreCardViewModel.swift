@@ -6,7 +6,7 @@ import Domain
 class ScoreCardViewModel {
     
     // MARK: - Properties
-    private let match: Match
+    let match: Match
     
     // MARK: - Initialization
     init(match: Match) {
