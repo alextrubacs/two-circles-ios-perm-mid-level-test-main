@@ -13,8 +13,9 @@ class FollowViewModel {
     var allTeams: [TeamSectionItem] = []
     var allPlayers: [PlayerSectionItem] = []
     var allLeagues: [LeagueSectionItem] = []
-    var favoriteTeamIds: Set<Int> = []
-    var favoritePlayerIds: Set<Int> = []
+    var favoriteTeamIds: [Int] = []
+    var favoritePlayerIds: [Int] = []
+    var favoriteLeagueIds: [Int] = []
     var isLoading = false
     var errorMessage: String?
     
@@ -42,17 +43,24 @@ class FollowViewModel {
     func toggleFavorite(id: Int, type: FavoriteType) async {
         guard let service = favoritesService else { return }
         
-        if isFavorite(id: id, type: type) {
+        let wasFavorite = isFavorite(id: id, type: type)
+        
+        if wasFavorite {
             do {
                 try await service.removeFavorite(id: id, type: type)
+                updateLocalFavoriteState(id: id, type: type, isFavorite: false)
             } catch {
                 errorMessage = error.localizedDescription
+                updateLocalFavoriteState(id: id, type: type, isFavorite: true)
             }
         } else {
             do {
                 try await service.addFavorite(id: id, type: type)
+                updateLocalFavoriteState(id: id, type: type, isFavorite: true)
             } catch {
                 errorMessage = error.localizedDescription
+                // Revert the UI state on error
+                updateLocalFavoriteState(id: id, type: type, isFavorite: false)
             }
         }
     }
@@ -64,7 +72,7 @@ class FollowViewModel {
         case .player:
             return favoritePlayerIds.contains(id)
         case .match:
-            return false // Not used in this view
+            return favoriteLeagueIds.contains(id) // Using match type for leagues
         }
     }
     
@@ -73,8 +81,9 @@ class FollowViewModel {
         errorMessage = nil
         
         do {
-            // Load all available data from matches
-            let allMatches = MockData.matches
+            // Load real data from DataSourceFactory
+            let matchesDataSource = DataSourceFactory.matchesDataSource()
+            let allMatches = try await matchesDataSource.execute()
             
             // Process teams
             let allTeamsFromMatches = allMatches.flatMap { $0.teams.map { $0.team } }
@@ -107,7 +116,7 @@ class FollowViewModel {
             await updateFavoriteStatus()
             
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = "Failed to load data: \(error.localizedDescription)"
         }
         
         isLoading = false
@@ -123,10 +132,42 @@ class FollowViewModel {
         guard let service = favoritesService else { return }
         
         do {
-            favoriteTeamIds = Set(try await service.getFavorites(of: .team))
-            favoritePlayerIds = Set(try await service.getFavorites(of: .player))
+            favoriteTeamIds = try await service.getFavorites(of: .team)
+            favoritePlayerIds = try await service.getFavorites(of: .player)
+            favoriteLeagueIds = try await service.getFavorites(of: .match) // Using match type for leagues
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+    
+    // MARK: - Local State Updates
+    
+    private func updateLocalFavoriteState(id: Int, type: FavoriteType, isFavorite: Bool) {
+        switch type {
+        case .team:
+            if isFavorite {
+                if !favoriteTeamIds.contains(id) {
+                    favoriteTeamIds.append(id)
+                }
+            } else {
+                favoriteTeamIds.removeAll { $0 == id }
+            }
+        case .player:
+            if isFavorite {
+                if !favoritePlayerIds.contains(id) {
+                    favoritePlayerIds.append(id)
+                }
+            } else {
+                favoritePlayerIds.removeAll { $0 == id }
+            }
+        case .match:
+            if isFavorite {
+                if !favoriteLeagueIds.contains(id) {
+                    favoriteLeagueIds.append(id)
+                }
+            } else {
+                favoriteLeagueIds.removeAll { $0 == id }
+            }
         }
     }
 }
