@@ -62,10 +62,12 @@ private extension ScoreCardList {
             .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 4, trailing: 0))
     }
 
+    var isFavouritesEmpty: Bool {
+        viewModel.favoriteTeamIds.isEmpty && viewModel.favoritePlayerIds.isEmpty
+    }
+
     var followBanner: some View {
-        FollowBanner(
-            isFavoritesEmpty: viewModel.groupedMatches.contains(where: { $0.leagueName == "Favorites"})
-        ) {
+        FollowBanner(isFavoritesEmpty: isFavouritesEmpty) {
             showFollowView = true
         }
         .listRowSeparator(.hidden)
