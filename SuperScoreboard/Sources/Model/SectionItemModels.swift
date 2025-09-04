@@ -53,18 +53,7 @@ struct LeagueSectionItem: SectionItem {
         self.id = competition.id
         self.displayName = competition.title
         self.competition = competition
-        self.imageName = Self.leagueImageName(for: competition.title)
-    }
-    
-    private static func leagueImageName(for title: String) -> String {
-        switch title {
-        case "Premier League":
-            return "Premier League"
-        case "UEFA Champions League":
-            return "Champions League"
-        default:
-            return "trophy.fill"
-        }
+        self.imageName = competition.title
     }
     
     // MARK: - Hashable & Equatable
